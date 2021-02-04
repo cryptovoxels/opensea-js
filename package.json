@@ -4,7 +4,8 @@
   "description": "Make opensea-js a cdn bundle",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build":"browserify -g uglifyify main.js > opensea_bundle.js"
   },
   "repository": {
     "type": "git",
@@ -18,5 +19,8 @@
   "homepage": "https://github.com/cryptovoxels/opensea-js#readme",
   "dependencies": {
     "opensea-js": "^1.1.10"
+  },
+  "devDependencies": {
+    "uglifyify": "^5.0.2"
   }
 }
