@@ -1,0 +1,2 @@
+# opensea-js
+Opensea bundler
