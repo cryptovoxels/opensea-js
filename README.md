@@ -1,2 +1,3 @@
 # opensea-js
-Opensea bundler
+Opensea bundler so that you can call opensea via <script>
+ 
