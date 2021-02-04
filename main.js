@@ -1,0 +1,1 @@
+window.opensea = require('opensea-js')
