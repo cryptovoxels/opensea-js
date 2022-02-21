@@ -5,6 +5,13 @@ import * as ethABI from 'ethereumjs-abi';
 import * as ethUtil from 'ethereumjs-util';
 import * as _ from 'lodash';
 
+import { AuthenticatedProxyContract } from './abi_gen/authenticated_proxy';
+import { WyvernAtomicizerContract } from './abi_gen/wyvern_atomicizer';
+import { WyvernDAOContract } from './abi_gen/wyvern_d_a_o';
+import { WyvernExchangeContract } from './abi_gen/wyvern_exchange';
+import { WyvernProxyRegistryContract } from './abi_gen/wyvern_proxy_registry';
+import { WyvernTokenContract } from './abi_gen/wyvern_token';
+import { schemas } from './schemas';
 import {
   AtomicizedReplacementEncoder,
   ECSignature,
@@ -18,8 +25,6 @@ import {
   WyvernProtocolConfig,
   WyvernProtocolError,
 } from './types';
-
-import { schemas } from './schemas';
 import { AbiDecoder } from './utils/abi_decoder';
 import { assert } from './utils/assert';
 import { constants } from './utils/constants';
@@ -27,14 +32,7 @@ import { decorators } from './utils/decorators';
 import { signatureUtils } from './utils/signature_utils';
 import { utils } from './utils/utils';
 
-import { WyvernAtomicizerContract } from './abi_gen/wyvern_atomicizer';
-import { WyvernDAOContract } from './abi_gen/wyvern_d_a_o';
-import { WyvernExchangeContract } from './abi_gen/wyvern_exchange';
-import { WyvernProxyRegistryContract } from './abi_gen/wyvern_proxy_registry';
-import { WyvernTokenContract } from './abi_gen/wyvern_token';
-
 export class WyvernProtocol {
-
     public static NULL_ADDRESS = constants.NULL_ADDRESS;
 
     public static MAX_UINT_256 = new BigNumber(2).pow(256).sub(1);
@@ -371,6 +369,21 @@ export class WyvernProtocol {
     public async getAvailableAddressesAsync(): Promise<string[]> {
         const availableAddresses = await this._web3Wrapper.getAvailableAddressesAsync();
         return availableAddresses;
+    }
+
+    /**
+     * Gets the authenticated proxy contract for a specific account address
+     * @param accountAddress address to retrieve the proxy contract from
+     */
+    public async getAuthenticatedProxy(accountAddress: string): Promise<AuthenticatedProxyContract> {
+        const proxyAddress = await this.wyvernProxyRegistry.proxies.callAsync(
+          accountAddress,
+        );
+
+        return new AuthenticatedProxyContract(
+            this._web3Wrapper.getContractInstance((constants.AUTHENTICATED_PROXY_ABI as any), proxyAddress),
+            {},
+        );
     }
 
     /**

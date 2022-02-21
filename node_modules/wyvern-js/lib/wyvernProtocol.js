@@ -28,8 +28,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
         while (_) try {
-            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [0, t.value];
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
                 case 0: case 1: t = op; break;
                 case 4: _.label++; return { value: op[1], done: false };
@@ -55,18 +55,19 @@ var web3_wrapper_1 = require("@0xproject/web3-wrapper");
 var ethABI = require("ethereumjs-abi");
 var ethUtil = require("ethereumjs-util");
 var _ = require("lodash");
-var types_1 = require("./types");
-var schemas_1 = require("./schemas");
-var assert_1 = require("./utils/assert");
-var constants_1 = require("./utils/constants");
-var decorators_1 = require("./utils/decorators");
-var signature_utils_1 = require("./utils/signature_utils");
-var utils_2 = require("./utils/utils");
+var authenticated_proxy_1 = require("./abi_gen/authenticated_proxy");
 var wyvern_atomicizer_1 = require("./abi_gen/wyvern_atomicizer");
 var wyvern_d_a_o_1 = require("./abi_gen/wyvern_d_a_o");
 var wyvern_exchange_1 = require("./abi_gen/wyvern_exchange");
 var wyvern_proxy_registry_1 = require("./abi_gen/wyvern_proxy_registry");
 var wyvern_token_1 = require("./abi_gen/wyvern_token");
+var schemas_1 = require("./schemas");
+var types_1 = require("./types");
+var assert_1 = require("./utils/assert");
+var constants_1 = require("./utils/constants");
+var decorators_1 = require("./utils/decorators");
+var signature_utils_1 = require("./utils/signature_utils");
+var utils_2 = require("./utils/utils");
 var WyvernProtocol = /** @class */ (function () {
     function WyvernProtocol(provider, config) {
         assert_1.assert.isWeb3Provider('provider', provider);
@@ -227,6 +228,23 @@ var WyvernProtocol = /** @class */ (function () {
         });
     };
     /**
+     * Gets the authenticated proxy contract for a specific account address
+     * @param accountAddress address to retrieve the proxy contract from
+     */
+    WyvernProtocol.prototype.getAuthenticatedProxy = function (accountAddress) {
+        return __awaiter(this, void 0, void 0, function () {
+            var proxyAddress;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.wyvernProxyRegistry.proxies.callAsync(accountAddress)];
+                    case 1:
+                        proxyAddress = _a.sent();
+                        return [2 /*return*/, new authenticated_proxy_1.AuthenticatedProxyContract(this._web3Wrapper.getContractInstance(constants_1.constants.AUTHENTICATED_PROXY_ABI, proxyAddress), {})];
+                }
+            });
+        });
+    };
+    /**
      * Signs an orderHash and returns its elliptic curve signature.
      * This method currently supports TestRPC, Geth and Parity above and below V1.6.6
      * @param   orderHash       Hex encoded orderHash to sign.
@@ -288,8 +306,8 @@ var WyvernProtocol = /** @class */ (function () {
     WyvernProtocol.prototype.awaitTransactionMinedAsync = function (txHash, pollingIntervalMs, timeoutMs) {
         if (pollingIntervalMs === void 0) { pollingIntervalMs = 1000; }
         return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
             var timeoutExceeded, txReceiptPromise;
+            var _this = this;
             return __generator(this, function (_a) {
                 timeoutExceeded = false;
                 if (timeoutMs) {

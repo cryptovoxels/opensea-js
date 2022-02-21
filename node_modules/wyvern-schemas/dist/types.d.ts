@@ -1,5 +1,5 @@
 import * as Web3 from 'web3';
-import { AnnotatedFunctionInput, AnnotatedFunctionABI, FunctionInputKind } from 'wyvern-js/lib/types';
+import { AnnotatedFunctionABI, AnnotatedFunctionInput, FunctionInputKind } from 'wyvern-js/lib/types';
 export { AnnotatedFunctionInput, AnnotatedFunctionABI, FunctionInputKind, };
 export declare enum Network {
     Main = "main",
@@ -60,8 +60,13 @@ export interface AnnotatedEventABI<T> {
     inputs: AnnotatedEventInput[];
     assetFromInputs: (inputs: any, web3: any) => Promise<T>;
 }
+export interface MerkleProof {
+    root: string;
+    proof: string[];
+}
 export interface SchemaFunctions<T> {
     transfer: (asset: T) => AnnotatedFunctionABI;
+    checkAndTransfer?: (asset: T, validatorAddress: string, proof?: MerkleProof) => AnnotatedFunctionABI;
     ownerOf?: (asset: T) => AnnotatedFunctionABI;
     countOf?: (asset: T) => AnnotatedFunctionABIReturning<number>;
     assetsOfOwnerByIndex: Array<AnnotatedFunctionABIReturning<T | null>>;

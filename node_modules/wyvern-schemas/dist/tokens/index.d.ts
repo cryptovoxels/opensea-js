@@ -1,5 +1,4 @@
-import { NetworkTokens } from '../types';
 export declare const tokens: {
-    rinkeby: NetworkTokens;
-    main: NetworkTokens;
+    rinkeby: import("../types").NetworkTokens;
+    main: import("../types").NetworkTokens;
 };

@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/cryptovoxels/opensea-js#readme",
   "dependencies": {
-    "opensea-js": "^1.2.7"
+    "opensea-js": "^2.0.1"
   },
   "devDependencies": {
     "uglifyify": "^5.0.2"
